@@ -2,12 +2,19 @@ let humanScore = 0;
 let computerScore = 0;
 const playerChoiceSection = document.querySelector("#player-choice");
 const resultSection = document.querySelector("#result");
+const humanScoreSpan = document.querySelector("#human-score");
+const computerScoreSpan = document.querySelector("#computer-score");
 
 function appendResult(message) {
     const para = document.createElement("p");
     para.textContent = message;
     resultSection.appendChild(para);
 }
+function updateScore() {
+    humanScoreSpan.textContent = humanScore;
+    computerScoreSpan.textContent = computerScore;
+}
+
 function getRandomChoice() {
     let numChoice = Math.floor(Math.random() * 3);
     if (numChoice === 0) {
@@ -32,8 +39,10 @@ function Tie() {
 function playRound(computerChoice, humanChoice) {
     computerChoice = computerChoice.toLowerCase();
     humanChoice = humanChoice.toLowerCase();
+    appendResult("Computer: "+computerChoice+" You: "+humanChoice);
     if (humanChoice === "rock") {
         if (computerChoice === "paper") {
+            computerWin();
         } else if (computerChoice === "scissor") {
             humanWin();
         } else {
@@ -56,14 +65,16 @@ function playRound(computerChoice, humanChoice) {
             Tie();
         }
     }
+    updateScore();
     checkWin();
 }
 function checkWin() {
-    if (humanScore <= 5 && computerScore <= 5) return;
+    if (humanScore < 5 && computerScore < 5) return;
     const winner = humanScore > computerScore ? "You" : "Computer";
     appendResult("Winner is " + winner + "!");
     appendResult("Your score: " + humanScore);
     appendResult("Computer score: " + computerScore);
+    playerChoiceSection.remove();
 }
 for (const item of playerChoiceSection.children) {
     item.addEventListener('click', () => playRound(getRandomChoice(), item.textContent));
