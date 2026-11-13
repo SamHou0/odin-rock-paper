@@ -1,5 +1,13 @@
 let humanScore = 0;
 let computerScore = 0;
+const playerChoiceSection = document.querySelector("#player-choice");
+const resultSection = document.querySelector("#result");
+
+function appendResult(message) {
+    const para = document.createElement("p");
+    para.textContent = message;
+    resultSection.appendChild(para);
+}
 function getRandomChoice() {
     let numChoice = Math.floor(Math.random() * 3);
     if (numChoice === 0) {
@@ -10,20 +18,16 @@ function getRandomChoice() {
         return "scissors";
     }
 }
-function getHumanChoice() {
-    let choice = prompt("Enter your choice...");
-    return choice;
-}
 function computerWin() {
-    console.log("You lose!");
+    appendResult("You lose...")
     computerScore++;
 }
 function humanWin() {
-    console.log("You win!");
+    appendResult("You win!");
     humanScore++;
 }
 function Tie() {
-    console.log("It's a tie.");
+    appendResult("It's a tie.");
 }
 function playRound(computerChoice, humanChoice) {
     computerChoice = computerChoice.toLowerCase();
@@ -52,17 +56,15 @@ function playRound(computerChoice, humanChoice) {
             Tie();
         }
     }
+    checkWin();
 }
-function playGame() {
-    for (let i = 0; i < 5; i++) {
-        const humanSelection = getHumanChoice();
-        const computerSelection = getRandomChoice();
-
-        playRound(computerSelection, humanSelection);
-    }
+function checkWin() {
+    if (humanScore <= 5 && computerScore <= 5) return;
+    const winner = humanScore > computerScore ? "You" : "Computer";
+    appendResult("Winner is " + winner + "!");
+    appendResult("Your score: " + humanScore);
+    appendResult("Computer score: " + computerScore);
 }
-playGame();
-const winner = humanScore > computerScore ? "You" : "Computer";
-console.log(winner + " wins!");
-console.log("Your score: "+humanScore);
-console.log("Computer score: "+computerScore);
+for (const item of playerChoiceSection.children) {
+    item.addEventListener('click', () => playRound(getRandomChoice(), item.textContent));
+}
